@@ -1,0 +1,16 @@
+[package]
+name = "lasercube"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+futures.workspace = true
+lasercube-core.workspace = true
+thiserror.workspace = true
+tokio.workspace = true
+tokio-stream.workspace = true
+tracing.workspace = true
+
+[dev-dependencies]
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
+tracing-subscriber.workspace = true
