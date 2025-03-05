@@ -1,7 +1,9 @@
 [package]
 name = "lasercube"
 version = "0.1.0"
-edition = "2021"
+description = "A library providing high-level interfaces for discovering and controlling LaserCube devices"
+edition.workspace = true
+license.workspace = true
 
 [dependencies]
 futures.workspace = true

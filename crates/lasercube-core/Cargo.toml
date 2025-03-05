@@ -1,7 +1,9 @@
 [package]
 name = "lasercube-core"
 version = "0.1.0"
+description = "A library providing high-level interfaces for discovering and controlling LaserCube devices"
 edition.workspace = true
+license.workspace = true
 
 [dependencies]
 thiserror.workspace = true
