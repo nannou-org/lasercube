@@ -357,7 +357,10 @@ mod tests {
         );
         assert_eq!(laser_info.header.model_number, 1);
         assert_eq!(laser_info.header.serial_number, [2, 2, 3, 4, 5, 6]);
-        assert_eq!(laser_info.header.ip_addr, Ipv4Addr::from([192, 168, 1, 100]));
+        assert_eq!(
+            laser_info.header.ip_addr,
+            Ipv4Addr::from([192, 168, 1, 100])
+        );
         assert_eq!(laser_info.model_name, "LaserCube Pro");
     }
 }

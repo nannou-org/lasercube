@@ -1,6 +1,6 @@
 use futures::StreamExt;
-use tokio::time::timeout;
 use std::time::Duration;
+use tokio::time::timeout;
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
