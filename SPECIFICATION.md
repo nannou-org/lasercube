@@ -45,15 +45,16 @@ Offset  Size    Description
 3       1       Firmware major version
 4       1       Firmware minor version
 5       1       Output enabled flag (boolean)
-6       5       Padding
-11      4       Current DAC rate (uint32, little-endian)
-15      4       Maximum DAC rate (uint32, little-endian)
-19      1       Padding
-20      2       RX buffer free space (uint16, little-endian)
-22      2       RX buffer size (uint16, little-endian)
-24      1       Battery percentage
-25      1       Temperature
-26      6       Serial number (first byte doubles as connection type)
+6       4       Padding
+10      4       Current DAC rate (uint32, little-endian)
+14      4       Maximum DAC rate (uint32, little-endian)
+18      1       Padding
+19      2       RX buffer free space (uint16, little-endian)
+21      2       RX buffer size (uint16, little-endian)
+23      1       Battery percentage
+24      1       Temperature
+25      1       Connection type
+26      6       Serial number
 32      4       IP address (4 bytes)
 36      1       Padding
 37      1       Model number
