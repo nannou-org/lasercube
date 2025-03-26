@@ -12,18 +12,18 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let target_ip = [255, 255, 255, 255].into();
     let mut devices = lasercube::discover::devices(bind_ip, target_ip).await?;
 
+    tracing::info!("Discovering devices for 5 seconds");
+
     // Set a timeout for discovery
     let discovery = timeout(Duration::from_secs(5), async {
         while let Some(device_info) = devices.next().await {
-            println!("Found LaserCube: {device_info:#?}");
+            tracing::info!("Found LaserCube: {device_info:#?}");
         }
     });
 
     // Wait for timeout or completion
-    match discovery.await {
-        Ok(_) => println!("Discovery complete"),
-        Err(_) => println!("Discovery timeout"),
-    }
+    let _ = discovery.await;
+    tracing::info!("Discovery complete");
 
     Ok(())
 }
