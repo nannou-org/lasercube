@@ -52,14 +52,6 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     tracing::debug!("Enabling buffer size responses");
     client.enable_buffer_size_response(true).await?;
 
-    // Get initial buffer free space
-    let initial_free = client.get_buffer_free().await?;
-    tracing::info!(
-        "Initial buffer free space: {}/{}",
-        initial_free,
-        device_info.header.rx_buffer_size
-    );
-
     // Enable laser output
     client.set_output(true).await?;
     tracing::info!("Laser output enabled");
@@ -78,8 +70,15 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Index tracking for continuous circle
     let mut current_index = 0;
 
-    // Track buffer free space
-    let mut buffer_free = initial_free;
+    // Track buffer free space, based on the latency we want.
+    const MAX_LATENCY_MS: u16 = 64;
+    let max_buffer_points = (device_info.header.dac_rate / 1_000) as u16 * MAX_LATENCY_MS;
+    let max_buffer_free = device_info.header.rx_buffer_size.min(max_buffer_points);
+    let buffer_free_diff = device_info.header.rx_buffer_size - max_buffer_free;
+    let mut buffer_free = device_info
+        .header
+        .rx_buffer_free
+        .saturating_sub(buffer_free_diff);
 
     tracing::info!("Starting to stream circle pattern...");
     tracing::info!("Press Ctrl+C to exit");
@@ -123,7 +122,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         // Wait for buffer feedback with a short timeout
         // This ensures we get an accurate buffer state without blocking too long
         match timeout(
-            Duration::from_millis(200),
+            Duration::from_millis(10),
             data_socket.recv_from(&mut response_buf),
         )
         .await
@@ -133,7 +132,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 tracing::debug!("response: {res:?}");
                 match res {
                     Ok(Response::BufferFree(free)) => {
-                        buffer_free = free;
+                        buffer_free = free.saturating_sub(buffer_free_diff);
                     }
                     Ok(response) => {
                         tracing::error!("Unexpected response: {response:?}");
